@@ -6,7 +6,7 @@ import sys, random
 class OndyWidget(QLabel):
     def __init__(self, parent, image_path):
         super().__init__(parent)
-        pixmap = QPixmap(image_path).scaled(100, 100)
+        pixmap = QPixmap(image_path).scaled(100, 14000, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         if pixmap.isNull():
             print("image로드 실패")
         self.setPixmap(pixmap)
@@ -34,10 +34,8 @@ class TransparentOverlay(QWidget):
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setGeometry(100, 100, 800, 600)  # 일단 위치 보이게
 
-
-
         self.ondys = []
-        self.add_ondy()  # ✅ 시작하자마자 1마리 추가
+        self.add_ondy()  #시작하자마자 1마리 추가
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_ondys)
