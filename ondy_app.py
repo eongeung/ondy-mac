@@ -1,73 +1,66 @@
-#pip install opencv-python numpy로 설치하세요.
-import cv2
-import numpy as np
-import random
+from PyQt5.QtWidgets import QApplication, QLabel, QWidget
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt, QTimer
+import sys, random
 
-#온디 클래스
-class Ondy:
-    def __init__(self, img, x, y):
-        self.img = img
-        self.x = x
-        self.y = y
-        self.dx = random.choice([-1, 1]) * random.randint(1, 3)
-        self.dy = random.choice([-1, 1]) * random.randint(1, 3)
+class OndyWidget(QLabel):
+    def __init__(self, parent, image_path):
+        super().__init__(parent)
+        pixmap = QPixmap(image_path).scaled(100, 100)
+        if pixmap.isNull():
+            print("image로드 실패")
+        self.setPixmap(pixmap)
+        self.resize(100, 100)
+        self.dx = random.choice([-3, 3])
+        self.dy = random.choice([-3, 3])
+        self.move(random.randint(0, 500), random.randint(0, 300))
+        self.show()
 
-    def move(self, frame_shape):
-        h, w = frame_shape[:2]
-        self.x += self.dx
-        self.y += self.dy
-        if self.x < 0 or self.x + self.img.shape[1] > w:
+    def move_step(self, max_width, max_height):
+        x, y = self.x() + self.dx, self.y() + self.dy
+        if x < 0 or x + self.width() > max_width:
             self.dx *= -1
-        if self.y < 0 or self.y + self.img.shape[0] > h:
+        if y < 0 or y + self.height() > max_height:
             self.dy *= -1
+        self.move(self.x() + self.dx, self.y() + self.dy)
 
-    def draw(self, frame):
-      h, w = self.img.shape[:2]
-      fh, fw = frame.shape[:2]
+    def mouseDoubleClickEvent(self, event):
+        self.deleteLater()
 
-    # 이미지가 프레임 밖으로 나가지 않도록 잘라서 넣기
-      x1, y1 = max(0, self.x), max(0, self.y)
-      x2, y2 = min(self.x + w, fw), min(self.y + h, fh)
-      img_crop = self.img[0:y2 - y1, 0:x2 - x1]
+class TransparentOverlay(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
+        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setGeometry(100, 100, 800, 600)  # 일단 위치 보이게
 
-      frame[y1:y2, x1:x2] = img_crop
 
-    def contains(self, px, py):
-        return self.x <= px <= self.x + self.img.shape[1] and self.y <= py <= self.y + self.img.shape[0]
 
-# 초기 설정
-ondys = []
-click_count = {}
+        self.ondys = []
+        self.add_ondy()  # ✅ 시작하자마자 1마리 추가
 
-def add_ondy():
-    ondy = Ondy(ondy_img.copy(), random.randint(0, 400), random.randint(0, 400))
-    ondys.append(ondy)
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_ondys)
+        self.timer.start(50)
 
-def mouse_callback(event, x, y, flags, param):
-    if event == cv2.EVENT_LBUTTONDBLCLK:
-        for ondy in ondys[:]:
-            if ondy.contains(x, y):
-                ondys.remove(ondy)
-                break
-            
-ondy_img = cv2.imread("ondy.png")  # 또는 작은 캐릭터 이미지
+        self.show()
 
-cv2.namedWindow("Ondy App")
-cv2.setMouseCallback("Ondy App", mouse_callback)
+    def add_ondy(self):
+        ondy = OndyWidget(self, "ondy.png")
+        self.ondys.append(ondy)
 
-while True:
-    frame = 255 * np.ones((600, 800, 3), dtype=np.uint8)  # 흰 배경
+    def update_ondys(self):
+        for ondy in self.ondys:
+            ondy.move_step(self.width(), self.height())
 
-    for ondy in ondys:
-        ondy.move(frame.shape)
-        ondy.draw(frame)
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Q:
+            self.close()
+        elif event.key() == Qt.Key_O:
+            self.add_ondy()
 
-    cv2.imshow("Ondy App", frame)
-
-    key = cv2.waitKey(50)
-    if key == ord('q'):
-        break
-    elif key == ord('o'):  # 'o' 키를 누르면 온디 추가
-        add_ondy()
-
-cv2.destroyAllWindows()
+if __name__ == '__main__':
+    print("Ondy 시작")
+    app = QApplication(sys.argv)
+    overlay = TransparentOverlay()
+    sys.exit(app.exec_())
