@@ -6,7 +6,7 @@ import sys, random
 class OndyWidget(QLabel):
     def __init__(self, parent, image_path):
         super().__init__(parent)
-        pixmap = QPixmap(image_path).scaled(100, 14000, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        pixmap = QPixmap(image_path).scaled(100, 100, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         if pixmap.isNull():
             print("image로드 실패")
         self.setPixmap(pixmap)
