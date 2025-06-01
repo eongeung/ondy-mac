@@ -22,8 +22,15 @@ class Ondy:
             self.dy *= -1
 
     def draw(self, frame):
-        h, w = self.img.shape[:2]
-        frame[self.y:self.y+h, self.x:self.x+w] = self.img
+      h, w = self.img.shape[:2]
+      fh, fw = frame.shape[:2]
+
+    # 이미지가 프레임 밖으로 나가지 않도록 잘라서 넣기
+      x1, y1 = max(0, self.x), max(0, self.y)
+      x2, y2 = min(self.x + w, fw), min(self.y + h, fh)
+      img_crop = self.img[0:y2 - y1, 0:x2 - x1]
+
+      frame[y1:y2, x1:x2] = img_crop
 
     def contains(self, px, py):
         return self.x <= px <= self.x + self.img.shape[1] and self.y <= py <= self.y + self.img.shape[0]
