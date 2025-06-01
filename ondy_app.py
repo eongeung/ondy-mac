@@ -39,7 +39,7 @@ class TransparentOverlay(QWidget):
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_ondys)
-        self.timer.start(50)
+        self.timer.start(5)
 
         self.show()
 
