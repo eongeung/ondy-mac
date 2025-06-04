@@ -9,6 +9,12 @@
 자세가 좋아지면 사라지는 방식으로 동작합니다.
 
 ---
+## Mac 버전
+https://github.com/eongeung/ondy-mac.git
+## Window 버전
+https://github.com/eongeung/ondy-window.git
+
+---
 
 ## 🛠 주요 기능
 
@@ -22,7 +28,7 @@
 
 ## 💡 예시 화면
 
-| ![](./result.gif)
+| ![](./ondy.gif)
 
 ---
 
@@ -39,5 +45,6 @@
 
 ## 🚀 실행 방법
 
+dist - ondy_app - ondy_app download
 
-
+종료 방법 : Ondy를 클릭한 뒤 Q를 누르면 자동 종료료
