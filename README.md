@@ -39,6 +39,5 @@
 
 ## 🚀 실행 방법
 
-```bash
-pip install pyqt5 pyserial
-python ondy_app.py
+
+
