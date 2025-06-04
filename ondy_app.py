@@ -28,13 +28,13 @@ class OndyWidget(QLabel):
     def move_step(self, max_width, max_height):
         # 마우스 위치 추적
         mouse_pos = QCursor.pos()
-        global_pos = self.mapFromGlobal(mouse_pos)
+        parent_mouse_pos = self.parent.mapFromGlobal(mouse_pos)
 
         cx = self.x() + self.width() / 2
         cy = self.y() + self.height() / 2
 
-        dx = global_pos.x() - cx
-        dy = global_pos.y() - cy
+        dx = parent_mouse_pos.x() - cx
+        dy = parent_mouse_pos.y() - cy
 
         dist = math.hypot(dx, dy)
         if dist != 0:
