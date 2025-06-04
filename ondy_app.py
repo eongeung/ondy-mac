@@ -1,5 +1,7 @@
 import os
-from PyQt5.QtWidgets import QApplication, QLabel, QWidget
+import math
+from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QDesktopWidget
+
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QTimer
 import sys, random
@@ -15,18 +17,32 @@ class OndyWidget(QLabel):
             print(f"이미지 로드 실패: {image_path}")
         self.setPixmap(pixmap)
         self.resize(100, 100)
-        self.dx = random.choice([-3, 3])
-        self.dy = random.choice([-3, 3])
+        
+        speed = random.uniform(1.5, 4.5)
+        angle = random.uniform(0, 360)
+        radian = angle * math.pi / 180
+        self.dx = speed * math.cos(radian)
+        self.dy = speed * math.sin(radian)
+        
         self.move(random.randint(0, 500), random.randint(0, 300))
         self.show()
 
     def move_step(self, max_width, max_height):
+        
+        if random.random() < 0.1:
+            angle_change = random.uniform(-30, 30)
+            speed = math.hypot(self.dx, self.dy)
+            current_angle = math.atan2(self.dy, self.dx)
+            new_angle = current_angle + math.radians(angle_change)
+            self.dx = speed * math.cos(new_angle)
+            self.dy = speed * math.sin(new_angle)
+        
         x, y = self.x() + self.dx, self.y() + self.dy
         if x < 0 or x + self.width() > max_width:
             self.dx *= -1
         if y < 0 or y + self.height() > max_height:
             self.dy *= -1
-        self.move(self.x() + self.dx, self.y() + self.dy)
+        self.move(int(self.x() + self.dx), int(self.y() + self.dy))
 
     def mouseDoubleClickEvent(self, event):
         self.deleteLater()
@@ -36,14 +52,19 @@ class TransparentOverlay(QWidget):
         super().__init__()
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
         self.setAttribute(Qt.WA_TranslucentBackground)
-        self.setGeometry(100, 100, 800, 600)
+        
+        screen_geometry = QApplication.primaryScreen().geometry()
+        screen_width = screen_geometry.width()
+        screen_height = screen_geometry.height()
+        self.setGeometry(0, 0, screen_width, screen_height)
+        
+        self.setFocusPolicy(Qt.StrongFocus)
 
         self.ondys = []
 
-        # ✅ 1. 이미지 목록 준비
         self.icon_paths = [os.path.join(ICON_DIR, f"cat{str(i).zfill(2)}.png") for i in range(1, 10)]
-        random.shuffle(self.icon_paths)  # ✅ 순서를 무작위로 섞음
-        self.icon_index = 0  # 현재까지 생성한 인덱스
+        random.shuffle(self.icon_paths) 
+        self.icon_index = 0 
 
         self.add_ondy()
 
@@ -58,7 +79,6 @@ class TransparentOverlay(QWidget):
         self.show()
 
     def add_ondy(self):
-        # ✅ 2. 9마리 넘으면 생성 안함
         if self.icon_index >= len(self.icon_paths):
             return
 
@@ -75,8 +95,14 @@ class TransparentOverlay(QWidget):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Q:
             self.close()
-        elif event.key() == Qt.Key_O:
-            self.add_ondy()
+            QApplication.quit() 
+            sys.exit(0)
+        
+        
+        #if event.key() == Qt.Key_Q:
+        #    self.close()
+        #elif event.key() == Qt.Key_O:
+        #    self.add_ondy()
 
 if __name__ == '__main__':
     print("Ondy 시작")
