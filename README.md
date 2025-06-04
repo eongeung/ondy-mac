@@ -1,50 +1,39 @@
-# 🐞 Ondy - 자세 교정 시각 피드백 앱
+# 🐾 Ondy - 마우스를 따라다니는 귀여운 친구들
 
-**Ondy**는 사용자의 나쁜 자세를 감지하고,  
-컴퓨터 화면 위에 캐릭터를 띄워  
-**시각적으로 자세 교정을 유도하는 앱**입니다.
-
-센서 기반의 로봇과 연결되며,  
-자세가 나쁘면 Ondy 캐릭터가 늘어나고  
-자세가 좋아지면 사라지는 방식으로 동작합니다.
-
----
-## Mac 버전
-https://github.com/eongeung/ondy-mac.git
-## Window 버전
-https://github.com/eongeung/ondy-window.git
+> 마우스를 졸졸 따라다니며 화면 위를 떠다니는 온디(Ondy)!  
+귀엽고 자유롭게 움직이는 친구들을 만나보세요.
 
 ---
 
-## 🛠 주요 기능
+## 🎬 예시 화면
 
-- 🪑 **자세 감지** (Arduino + 센서)
-- 📡 **시리얼 통신 기반 BAD/GOOD 수신**
-- 🖥 **화면 위 시각화 (PyQt5)**
-- 🐞 **Ondy 캐릭터 자동 등장 및 이동**
-- 👆 **더블 클릭 시 제거 가능**
+![예시](./ondy.gif)
 
 ---
 
-## 💡 예시 화면
+## 📦 다운로드
 
-| ![](./ondy.gif)
+- **🪟 Windows 버전:**  
+  👉 [https://github.com/eongeung/ondy-window.git](https://github.com/eongeung/ondy-window.git)
 
----
-
-## ⚙️ 기술 스택
-
-| 분류 | 사용 기술 |
-|------|-----------|
-| H/W | Arduino UNO, 자세 센서 (MPU6050 등) |
-| 분석 | 조건 기반 또는 OpenCV|
-| 통신 | pyserial (USB 시리얼 통신) |
-| 화면 | Python, PyQt5 |
+- **🍎 macOS 버전:**  
+  👉 [https://github.com/eongeung/ondy-mac.git](https://github.com/eongeung/ondy-mac.git)
 
 ---
 
 ## 🚀 실행 방법
+- 저장소에 포함된 실행 파일 실행:
+   - Windows: `dist/ondy_app.exe`
+   - macOS: `dist - ondy_app - ondy_app` 실행 파일 
 
-dist - ondy_app - ondy_app download
+---
 
-종료 방법 : Ondy를 클릭한 뒤 Q를 누르면 자동 종료료
+## ❓ 종료 방법
+
+- **Ondy를 마우스로 한 번 클릭한 뒤, `Q` 키를 누르면 종료됩니다.**
+
+
+## 📄 라이선스
+
+MIT License  
+이미지 및 캐릭터 리소스는 개인 프로젝트 용도로 사용됩니다.
